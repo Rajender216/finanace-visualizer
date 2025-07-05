@@ -1,20 +1,24 @@
-import { connectDB } from '@/lib/db'
-import { Transaction } from '@/models/transaction'
-import { NextResponse } from 'next/server'
+import { connectDB } from "@/lib/db";
+import { Transaction } from "@/models/transaction";
+import { NextResponse } from "next/server";
 
 export async function DELETE(
   req: Request,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
-    await connectDB()
-    const { id } = context.params
+    await connectDB();
 
-    await Transaction.findByIdAndDelete(id)
+    // Await the entire params object first
+    const { id } = await params;
+    await Transaction.findByIdAndDelete(id);
 
-    return NextResponse.json({ message: 'Transaction deleted successfully' })
+    return NextResponse.json({ message: "Transaction deleted successfully" });
   } catch (err) {
-    console.error('DELETE error:', err)
-    return NextResponse.json({ message: 'Failed to delete transaction' }, { status: 500 })
+    console.error("DELETE error:", err);
+    return NextResponse.json(
+      { message: "Failed to delete transaction" },
+      { status: 500 }
+    );
   }
 }
