@@ -1,35 +1,23 @@
 import { connectDB } from "@/lib/db";
 import { Transaction } from "@/models/transaction";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
-export async function DELETE(
-  request: NextRequest,
+export async function GET(
+  req: Request,
   { params }: { params: { id: string } }
 ) {
   try {
     await connectDB();
-
-    // Direct access without destructuring to avoid the await warning
-    const { id } = await params;
-    const result = await Transaction.findByIdAndDelete(id);
-
-    if (!result) {
+    const transaction = await Transaction.findById(params.id);
+    if (!transaction) {
       return NextResponse.json(
         { message: "Transaction not found" },
         { status: 404 }
       );
     }
-
-    return NextResponse.json(
-      { message: "Transaction deleted successfully" },
-      { status: 200 }
-    );
+    return NextResponse.json(transaction);
   } catch (err) {
-    console.error("DELETE error:", err);
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
-    );
+    console.error("GET Error:", err);
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }
