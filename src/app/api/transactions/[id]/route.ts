@@ -4,15 +4,12 @@ import { NextResponse } from "next/server";
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     await connectDB();
-
-    // Correct way to access params in API routes
-    const id = params.id;
+    const { id } = await context.params;
     await Transaction.findByIdAndDelete(id);
-
     return NextResponse.json({ message: "Transaction deleted successfully" });
   } catch (err) {
     console.error("DELETE error:", err);
