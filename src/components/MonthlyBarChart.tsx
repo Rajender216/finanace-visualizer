@@ -25,7 +25,7 @@ export default function MonthlyBarChart({ refresh }: { refresh: number }) {
 
       // Group by month
       const grouped: { [key: string]: number } = {};
-      for (let txn of transactions) {
+      for (const txn of transactions) {
         const month = new Date(txn.date).toLocaleString("default", {
           month: "short",
           year: "numeric",
