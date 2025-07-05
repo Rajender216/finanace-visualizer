@@ -3,14 +3,14 @@ import { Transaction } from "@/models/transaction";
 import { NextResponse } from "next/server";
 
 export async function DELETE(
-  req: Request,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
     await connectDB();
 
-    // Await the entire params object first
-    const { id } = await params;
+    // Correct way to access params in API routes
+    const id = params.id;
     await Transaction.findByIdAndDelete(id);
 
     return NextResponse.json({ message: "Transaction deleted successfully" });
